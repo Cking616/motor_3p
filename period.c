@@ -30,10 +30,10 @@ inline void on_sys_period(void)
         pos_controller_period();
     }
 
-    if(_tick % 500 == 1)
-    {
-        speed_controller_print();
-    }
+    //if(_tick % 500 == 1)
+    //{
+    //    speed_controller_print();
+    //}
 
     if(_tick == 999)
     {
