@@ -163,15 +163,6 @@ void drv8308_init(void)
 
 void drv8308_set_pwm(int speed)
 {
-    //if(pwm > 3970)
-    //{
-    //    pwm = 3970;
-    //}
-    //WriteDrv(0x0B, pwm);
-    //if (speed >= 200)
-    //    speed = 199;
-    //int pwm = 1250000 / speed;
-    //PWMGenPeriodSet(PWM1_BASE, PWM_GEN_1, pwm );
     PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, speed);
 }
 

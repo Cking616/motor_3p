@@ -16,7 +16,7 @@ volatile speed_controller_state pid_state;
 
 void speed_controller_init()
 {
-    pid_state.kp = 1.728f;
+    pid_state.kp = 2.428f;
     pid_state.ki = 0.0724f;
 
     pid_state.last_encoder = encoder_get_value();
@@ -31,7 +31,7 @@ void speed_controller_init()
 
 void speed_controller_period()
 {
-    static float a = 0.725f;
+    static float a = 0.775f;
     float cur_pwm = 0.0f;
     int out_pwm = 0;
     int cur_encoder = encoder_get_value();
@@ -94,19 +94,19 @@ inline void speed_controller_set_speed(int speed)
         return;
     }
 
-    /*
+
     if(pid_state.target_speed == 0 || pid_state.target_speed * speed < 0)
     {
         if(speed > 0)
         {
-            pid_state.last_pwm = 10;
+            pid_state.last_pwm = 15;
         }
         else
         {
-            pid_state.last_pwm = -10;
+            pid_state.last_pwm = -15;
         }
     }
-    */
+
     pid_state.target_speed = speed;
 }
 

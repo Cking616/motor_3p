@@ -8,47 +8,28 @@
 #include "task/speed_controller.h"
 #include "utils/uartstdio.h"
 
+int _i = 0;
 // you should change position like this.
+// move to 20000, a = 2
 void test_pos()
 {
-     int cur_encoder = 0;
-     pos_controller_set_pos(cur_encoder - 2000);
-     //wait about 10ms until the next reading.
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 3000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 5000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 7000);
-     delay_ms(300);
-     pos_controller_set_pos(cur_encoder - 12000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 15000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 17000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 18000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 19000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 20000);
-     delay_s(2);
-
-     pos_controller_set_pos(cur_encoder - 15000);
-     //wait about 10ms until the next reading.
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 12000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 7000);
-     delay_ms(300);
-     pos_controller_set_pos(cur_encoder - 5000);
-     delay_ms(300);
-     pos_controller_set_pos(cur_encoder - 3000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder - 2000);
-     delay_ms(150);
-     pos_controller_set_pos(cur_encoder);
-     delay_s(2);
+     int cur_encoder = pos_controller_get_encoder();
+     if(_i < 50)
+     {
+         pos_controller_set_pos(_i * _i);
+     }
+     else if(_i >= 50 && _i < 200)
+     {
+         pos_controller_set_pos(_i * 100 - 2500);
+     }
+     else if(_i >= 200 && _i < 250)
+     {
+         pos_controller_set_pos(500 * _i -_i * _i - 42500);
+     }
+     else
+     {
+         pos_controller_set_pos(20000);
+     }
 }
 
 int main()
@@ -61,6 +42,7 @@ int main()
     UARTprintf("\n\nInit System!\n");
     UARTprintf("Address:%d!\n", driver_get_address());
     //pos_controller_set_pos(-5000);
+    //test_pos();
     while(1)
     {
         distance_thread();
@@ -70,6 +52,7 @@ int main()
         //pos_controller_set_pos(0 - 15000);
         test_pos();
         delay_ms(10);
+        _i ++;
     }
     return 1;
 }
