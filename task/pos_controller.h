@@ -21,6 +21,7 @@ typedef struct
     int         last_err;
     //int         last_err2;
     int         max_speed;   //unit: rpm / 4 ;300 rpm => (300 / 60 * 4000) pulse per millosecond = 20 pulse / ms
+    float       max_acc;
     float       last_speed;
 }pos_controller_state;
 

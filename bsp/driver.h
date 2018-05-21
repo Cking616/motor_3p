@@ -14,4 +14,5 @@ inline int driver_get_address(void);
 
 void driver_init_system(void);
 
+inline void driver_start_tick();
 #endif /* BSP_DRIVER_H_ */

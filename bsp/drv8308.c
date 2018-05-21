@@ -49,32 +49,32 @@ void PWM1IntHandler(void)
 uint16_t ReadDrv( int Ad )
 {
     uint32_t D[3];
-    GPIOPinWrite( SSI_CS_A, SSI_CS_B, SSI_CS_B );
-    SysCtlDelay( 26 ); //1uSec
-    SSIDataPut(SSI0_BASE, 0x80 + Ad  );  // read address
-    SSIDataPut(SSI0_BASE, 0  );
+    ROM_GPIOPinWrite( SSI_CS_A, SSI_CS_B, SSI_CS_B );
+    ROM_SysCtlDelay( 26 ); //1uSec
+    ROM_SSIDataPut(SSI0_BASE, 0x80 + Ad  );  // read address
+    ROM_SSIDataPut(SSI0_BASE, 0  );
     SSIAdvDataPutFrameEnd( SSI0_BASE,  0 );
-    while(SSIBusy(SSI0_BASE)) { }
-    SysCtlDelay( 26 ); //1uSec
-    GPIOPinWrite( SSI_CS_A, SSI_CS_B, 0 );
-    SSIDataGet(SSI0_BASE, &D[0]);
-    SSIDataGet(SSI0_BASE, &D[1]);
-    SSIDataGet(SSI0_BASE, &D[2]);
-    SysCtlDelay( 26 ); //1uSec
+    while(ROM_SSIBusy(SSI0_BASE)) { }
+    ROM_SysCtlDelay( 26 ); //1uSec
+    ROM_GPIOPinWrite( SSI_CS_A, SSI_CS_B, 0 );
+    ROM_SSIDataGet(SSI0_BASE, &D[0]);
+    ROM_SSIDataGet(SSI0_BASE, &D[1]);
+    ROM_SSIDataGet(SSI0_BASE, &D[2]);
+    ROM_SysCtlDelay( 26 ); //1uSec
     return ((D[1] & 0xFF) << 8) | (D[2] & 0xFF);
 }
 
 void WriteDrv( int Ad, uint16_t Data )
 {
     //uint32_t D[3];
-    GPIOPinWrite( SSI_CS_A, SSI_CS_B, SSI_CS_B );
-    SysCtlDelay( 26 ); //1uSec
-    SSIDataPut(SSI0_BASE, Ad  );  // write address
-    SSIDataPut(SSI0_BASE, (Data >> 8) & 0xFF );
+    ROM_GPIOPinWrite( SSI_CS_A, SSI_CS_B, SSI_CS_B );
+    ROM_SysCtlDelay( 26 ); //1uSec
+    ROM_SSIDataPut(SSI0_BASE, Ad  );  // write address
+    ROM_SSIDataPut(SSI0_BASE, (Data >> 8) & 0xFF );
     SSIAdvDataPutFrameEnd( SSI0_BASE,  Data & 0xFF );
-    while(SSIBusy(SSI0_BASE)) { }
-    SysCtlDelay( 26 ); //1uSec
-    GPIOPinWrite( SSI_CS_A, SSI_CS_B, 0 );
+    while(ROM_SSIBusy(SSI0_BASE)) { }
+    ROM_SysCtlDelay( 26 ); //1uSec
+    ROM_GPIOPinWrite( SSI_CS_A, SSI_CS_B, 0 );
     //SSIDataGet(SSI0_BASE, &D[0]);
     //SSIDataGet(SSI0_BASE, &D[1]);
     //SSIDataGet(SSI0_BASE, &D[2]);
@@ -88,46 +88,46 @@ void drv8308_init(void)
     //ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM0);
     ROM_SysCtlPWMClockSet( SYSCTL_PWMDIV_8 );  // 10Mhz --> 50Khz division is 25
 
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_SSI0);
+    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_SSI0);
 
-    GPIOPinTypeGPIOOutput( RESET_A,  RESET_B );
-    GPIOPinTypeGPIOOutput( ENABLE_A, ENABLE_B );
-    GPIOPinTypeGPIOOutput( DIR_A,    DIR_B );
-    GPIOPinTypeGPIOOutput( BRAKE_A,  BRAKE_B );
-    GPIOPinWrite( RESET_A,  RESET_B,  0 );
-    GPIOPinWrite( ENABLE_A, ENABLE_B, 0 );
-    GPIOPinWrite( DIR_A,    DIR_B,    0 );
-    GPIOPinWrite( BRAKE_A,  BRAKE_B,  0 );
+    ROM_GPIOPinTypeGPIOOutput( RESET_A,  RESET_B );
+    ROM_GPIOPinTypeGPIOOutput( ENABLE_A, ENABLE_B );
+    ROM_GPIOPinTypeGPIOOutput( DIR_A,    DIR_B );
+    ROM_GPIOPinTypeGPIOOutput( BRAKE_A,  BRAKE_B );
+    ROM_GPIOPinWrite( RESET_A,  RESET_B,  0 );
+    ROM_GPIOPinWrite( ENABLE_A, ENABLE_B, 0 );
+    ROM_GPIOPinWrite( DIR_A,    DIR_B,    0 );
+    ROM_GPIOPinWrite( BRAKE_A,  BRAKE_B,  0 );
 
-    GPIOPinWrite( RESET_A,  RESET_B,  RESET_B );
+    ROM_GPIOPinWrite( RESET_A,  RESET_B,  RESET_B );
     ROM_SysCtlDelay(80000);
     //Delay_ms(10);
-    GPIOPinWrite( RESET_A,  RESET_B,  0 );
+    ROM_GPIOPinWrite( RESET_A,  RESET_B,  0 );
 
 
     // PWM yuli
-    GPIOPinConfigure(GPIO_PA6_M1PWM2); // clock to Drv
-    GPIOPinTypePWM(GPIO_PORTA_BASE, GPIO_PIN_6 );
-    PWMGenConfigure(PWM1_BASE, PWM_GEN_1, PWM_GEN_MODE_NO_SYNC);  // Configure the PWM0 to count up/down without synchronization.
-    PWMGenPeriodSet(PWM1_BASE, PWM_GEN_1, 200 );    // 50000 = 25Hz, 0xffff = 19.1hz
-    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, 10);
-    PWMOutputState(PWM1_BASE, PWM_OUT_2_BIT, true);  // Enable the PWM Bits output signals.
-    PWMGenEnable(PWM1_BASE, PWM_GEN_1);     // Enables the counter for a PWM generator block.
+    ROM_GPIOPinConfigure(GPIO_PA6_M1PWM2); // clock to Drv
+    ROM_GPIOPinTypePWM(GPIO_PORTA_BASE, GPIO_PIN_6 );
+    ROM_PWMGenConfigure(PWM1_BASE, PWM_GEN_1, PWM_GEN_MODE_NO_SYNC);  // Configure the PWM0 to count up/down without synchronization.
+    ROM_PWMGenPeriodSet(PWM1_BASE, PWM_GEN_1, 200 );    // 50000 = 25Hz, 0xffff = 19.1hz
+    ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, 10);
+    ROM_PWMOutputState(PWM1_BASE, PWM_OUT_2_BIT, true);  // Enable the PWM Bits output signals.
+    ROM_PWMGenEnable(PWM1_BASE, PWM_GEN_1);     // Enables the counter for a PWM generator block.
 
-    GPIOPinConfigure(GPIO_PA2_SSI0CLK);
-    GPIOPinConfigure(GPIO_PA4_SSI0RX);
-    GPIOPinConfigure(GPIO_PA5_SSI0TX);
-    GPIOPinTypeGPIOOutput( SSI_CS_A, SSI_CS_B );
-    GPIOPinWrite( SSI_CS_A, SSI_CS_B, 0 );
+    ROM_GPIOPinConfigure(GPIO_PA2_SSI0CLK);
+    ROM_GPIOPinConfigure(GPIO_PA4_SSI0RX);
+    ROM_GPIOPinConfigure(GPIO_PA5_SSI0TX);
+    ROM_GPIOPinTypeGPIOOutput( SSI_CS_A, SSI_CS_B );
+    ROM_GPIOPinWrite( SSI_CS_A, SSI_CS_B, 0 );
     //      PA5 - SSI0Tx
     //      PA4 - SSI0Rx
     //      PA3 - SSI0Fss
     //      PA2 - SSI0CLK
-    GPIOPinTypeSSI(GPIO_PORTA_BASE, GPIO_PIN_5 | GPIO_PIN_4 | GPIO_PIN_2);
-    SSIConfigSetExpClk(SSI0_BASE, SysCtlClockGet(), SSI_FRF_MOTO_MODE_0,SSI_MODE_MASTER, 1000000, 8);
-    SSIEnable(SSI0_BASE);
+    ROM_GPIOPinTypeSSI(GPIO_PORTA_BASE, GPIO_PIN_5 | GPIO_PIN_4 | GPIO_PIN_2);
+    ROM_SSIConfigSetExpClk(SSI0_BASE, ROM_SysCtlClockGet(), SSI_FRF_MOTO_MODE_0,SSI_MODE_MASTER, 1000000, 8);
+    ROM_SSIEnable(SSI0_BASE);
     // Read any residual data from the SSI port.
-    while(SSIDataGetNonBlocking( SSI0_BASE, &I)) ;
+    while(ROM_SSIDataGetNonBlocking( SSI0_BASE, &I)) ;
 
      WriteDrv(0x2A, 0);  // clear errors
      WriteDrv(0x00,0x0011); // AG_SETPT[15:12]=191hz, SYNRECT[8]=1 PWMF[7:6]=50khz SPDMODE[5:4]=Clock Freq RETRY[0]=1
@@ -163,20 +163,23 @@ void drv8308_init(void)
 
 void drv8308_set_pwm(int speed)
 {
-    PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, speed);
+    // at least 3
+    if(speed < 3)
+        speed = 3;
+    ROM_PWMPulseWidthSet(PWM1_BASE, PWM_OUT_2, speed);
 }
 
 void drv8308_enable(int on)
 {
-    GPIOPinWrite( ENABLE_A, ENABLE_B, on? ENABLE_B : 0 );
+    ROM_GPIOPinWrite( ENABLE_A, ENABLE_B, on? ENABLE_B : 0 );
 }
 
 void drv8308_set_dir(int dir)
 {
-    GPIOPinWrite( DIR_A,    DIR_B,    dir? DIR_B: 0);
+    ROM_GPIOPinWrite( DIR_A,    DIR_B,    dir? DIR_B: 0);
 }
 
 void drv8308_set_brake(int on)
 {
-    GPIOPinWrite( BRAKE_A,  BRAKE_B,  on? BRAKE_B: 0);
+    ROM_GPIOPinWrite( BRAKE_A,  BRAKE_B,  on? BRAKE_B: 0);
 }

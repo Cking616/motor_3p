@@ -8,28 +8,46 @@
 #include "task/speed_controller.h"
 #include "utils/uartstdio.h"
 
-int _i = 0;
+int _i = 1;
+int g_target_encoder = 0;
 // you should change position like this.
 // move to 20000, a = 2
-void test_pos()
+void test_pos(int _tick)
 {
-     int cur_encoder = pos_controller_get_encoder();
-     if(_i < 50)
+     if(_tick < 50)
      {
-         pos_controller_set_pos(_i * _i);
+         g_target_encoder = g_target_encoder + 2 * _tick;
+         pos_controller_set_pos(g_target_encoder);
      }
-     else if(_i >= 50 && _i < 200)
+     else if(_tick >= 50 && _tick < 200)
      {
-         pos_controller_set_pos(_i * 100 - 2500);
+         g_target_encoder = g_target_encoder + 100;
+         pos_controller_set_pos(g_target_encoder);
      }
-     else if(_i >= 200 && _i < 250)
+     else if(_tick >= 200 && _tick <= 250)
      {
-         pos_controller_set_pos(500 * _i -_i * _i - 42500);
+         g_target_encoder = g_target_encoder + 2 * (250 - _tick);
+         pos_controller_set_pos(g_target_encoder);
      }
-     else
-     {
-         pos_controller_set_pos(20000);
-     }
+}
+
+void test_pos2(int _tick)
+{
+    if(_tick < 100)
+    {
+        g_target_encoder = g_target_encoder - 2 * _tick;
+        pos_controller_set_pos(g_target_encoder);
+    }
+    else if(_tick >= 100 && _tick < 400)
+    {
+        g_target_encoder = g_target_encoder - 200;
+        pos_controller_set_pos(g_target_encoder);
+    }
+    else if(_tick >= 400 && _tick <= 500)
+    {
+        g_target_encoder = g_target_encoder - 2 * (500 - _tick);
+        pos_controller_set_pos(g_target_encoder);
+    }
 }
 
 int main()
@@ -41,16 +59,44 @@ int main()
     pos_controller_init();
     UARTprintf("\n\nInit System!\n");
     UARTprintf("Address:%d!\n", driver_get_address());
+    driver_start_tick();
     //pos_controller_set_pos(-5000);
     //test_pos();
     while(1)
     {
         distance_thread();
 
-        //Prints out the distance measured.
-        //UARTprintf("dis: %2dcm \n" , distance_get_dis());
-        //pos_controller_set_pos(0 - 15000);
-        test_pos();
+        if(_i <= 250)
+        {
+            test_pos(_i);
+        }
+
+        if(_i >= 550 && _i <= 1050)
+        {
+            test_pos2(_i - 550);
+        }
+
+
+        if(_i >= 1350 && _i <= 1600)
+        {
+            test_pos(_i - 1350);
+        }
+
+        if(_i >= 1900 && _i <= 2150)
+        {
+            test_pos(_i - 1900);
+        }
+
+        if(_i >= 2450 && _i <= 2700)
+        {
+            test_pos(_i - 2450);
+        }
+
+        if(_i == 3000)
+        {
+            _i = 1;
+        }
+
         delay_ms(10);
         _i ++;
     }

@@ -26,14 +26,14 @@ inline void on_sys_period(void)
 
     if(_tick % 5 == 1)
     {
-        cmd_thread(driver_get_address());
+        //cmd_thread(driver_get_address());
         pos_controller_period();
     }
 
-    //if(_tick % 500 == 1)
-    //{
-    //    speed_controller_print();
-    //}
+    if(_tick % 500 == 1)
+    {
+        speed_controller_print();
+    }
 
     if(_tick == 999)
     {

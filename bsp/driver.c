@@ -126,9 +126,6 @@ void driver_init_system(void)
     encoder_reset();
 
     //speed_controller_init();
-
-    ROM_SysTickEnable();
-    ROM_SysTickIntEnable();
     //SysTickIntRegister(SysTickIntHandler);
 
     lights_turn_led_red(1);
@@ -136,4 +133,10 @@ void driver_init_system(void)
 
     drv8308_enable(1);
     //can_write(_address, 0x12345699, 0 ); // magic number means reset just happened
+}
+
+inline void driver_start_tick()
+{
+    ROM_SysTickEnable();
+    ROM_SysTickIntEnable();
 }
